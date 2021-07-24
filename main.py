@@ -6,7 +6,6 @@ pygame.display.set_caption("Sudoku Solver")
 
 WHITE = (255, 255, 255)
 
-# change
 
 def main():
     
