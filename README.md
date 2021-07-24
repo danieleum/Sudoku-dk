@@ -1,1 +1,1 @@
-# minesweeper-dk
+# WordCookie-dk
