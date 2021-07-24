@@ -2,7 +2,7 @@ import pygame
 
 WIDTH, HEIGHT = 900, 500
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Sudoku")
+pygame.display.set_caption("Sudoku Solver")
 
 WHITE = (255, 255, 255)
 
