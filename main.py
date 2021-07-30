@@ -19,7 +19,7 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
 
-        board.place(0, 3)
+        board.place(23, 3)
         draw_window(board)
                 
     pygame.quit()
@@ -39,7 +39,7 @@ def draw_window(board):
         for j in range(SIZE):
             if (board.board[i, j] != 0):
                 # draw the number pic in
-                print("hi")
+                pygame.draw.line(WINDOW, BLACK, (0, 0), (50, 50), 3)
 
     pygame.display.update()
 

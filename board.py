@@ -7,7 +7,7 @@ SIZE = 9
 class Board:
     def __init__(self):
         # board has 9 rows x 9 columns of cells.
-        self.board = np.zeroes((SIZE, SIZE))
+        self.board = np.zeros((SIZE, SIZE))
         
         # 2D array
         rows, cols = (SIZE, SIZE)
@@ -19,7 +19,9 @@ class Board:
             self.secondBoard.append(col)
     
     def place(self, cellNumber, n):
-        self.board[cellNumber / SIZE, cellNumber % SIZE] = n
+        i = cellNumber // SIZE
+        j = cellNumber % SIZE
+        self.board[i, j] = n
         
 
     def remove(self, cellNumber):
