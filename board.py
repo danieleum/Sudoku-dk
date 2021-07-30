@@ -1,41 +1,74 @@
 import pygame
+
 import numpy as np
 
-BOARD_ROWS = 9
-BOARD_COLS = 9
-NUM_NUMS = 9
-
-# UPDATE: I began trying to solve the way that the website recommended before 
-# I realized it wasn't recursive backtracking. So we may want to completely redo
-# this later
+SIZE = 9
 
 class Board:
     def __init__(self):
-        # board has 9 rows x 9 columns of cells. Each cell has 9
-        # possible numbers in it, kept track of with 3rd dimension of array
-        self.board = np.zeroes((BOARD_ROWS, BOARD_COLS, NUM_NUMS))
-        solved = False
+        # board has 9 rows x 9 columns of cells.
+        self.board = np.zeroes((SIZE, SIZE))
+        
+        # 2D array
+        rows, cols = (SIZE, SIZE)
+        self.secondBoard=[]
+        for i in range(rows):
+            col = []
+            for j in range(cols):
+                col.append(0)
+            self.secondBoard.append(col)
+    
+    def place(self, cellNumber, n):
+        self.board[cellNumber / SIZE, cellNumber % SIZE] = n
+        
 
-    def generate_complete_grid(self):
-        print("unfinished")
+    def remove(self, cellNumber):
+        self.board[cellNumber / SIZE, cellNumber % SIZE] = 0
+    
+    def getUnassignedLocation(self) -> int:
+        for i in range(SIZE):
+            for j in range(SIZE):
+                if (self.board[i, j] == 0):
+                    return i * SIZE + j
+        return -1
+    
+    def noConflicts(self, cellNumber, n):
+        # find the row that we want to check
+        rowCheck = cellNumber / SIZE
+        # find the col that we want to check
+        colCheck = cellNumber % SIZE
+        
+        # check the row
+        for col in range(len(SIZE)):
+            if self.board[rowCheck][col] == n and colCheck != col:
+                return False
 
-    def solve_easy(self):
-        while (not solved):
-            for row in range(1, 10):
-                for i in range(1, 10):
-                    # check if that number has only one place to insert
-                    print("unfinished")
+        # check the column
+        for row in range(len(SIZE)):
+            if self.board[row][colCheck] == n and rowCheck != row:
+                return False
 
-            for col in range(1, 10):
-                for i in range(1, 10):
-                    # check if that number has only one place to insert
-                    print("unfinished")
+        # check the box
+        box_row = rowCheck // 3
+        box_col = colCheck // 3
+        for i in range(box_col * 3, box_col * 3 + 3):
+            for j in range(box_row * 3, box_row * 3 + 3):
+                if self.board[i][j] == n and rowCheck != i and colCheck != j:
+                    return False
 
-            for box in range(1, 10):
-                for i in range(1, 10):
-                    # check if that number has only one place to insert
-                    print("unfinished")
+        return True
 
-            # if the board has been solved
-            if ():
-                solved = not solved
+
+
+    def explore(self) -> bool:
+        cellNumber = self.getUnassignedLocation()
+        if (cellNumber == -1):
+            return True
+        else:
+            for i in range(1, SIZE + 1):
+                if (self.noConflicts(cellNumber, i)):
+                    self.place(cellNumber, i)
+                    if (self.explore()):
+                        return True
+                    self.remove(cellNumber) 
+            return False
