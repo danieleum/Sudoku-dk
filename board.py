@@ -17,6 +17,11 @@ class Board:
             for j in range(cols):
                 col.append(0)
             self.secondBoard.append(col)
+
+    # for testing purpose
+    # grabs a new 2-d array and initializes our board with it
+    def grabBoard(board):
+        print("hello")
     
     def place(self, cellNumber, n):
         i = cellNumber // SIZE
