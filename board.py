@@ -1,6 +1,7 @@
 import pygame
 
 import numpy as np
+from copy import copy, deepcopy
 import random
 
 SIZE = 9
@@ -57,8 +58,13 @@ class Board:
 
         return True
 
-
-    def explore(self):
+    # Precondition: Assumes the board so far is valid
+    # For a partially filled out board, this method fills out the rest
+    # of the board. 
+        # If it can do that with no conflicts, it returns True.
+        # If it can't do that with no conflicts, it returns False.
+    def fullSolve(self):
+        # gets next open space first
         cellNumber = self.getUnassignedLocation()
         if (cellNumber == -1):
             return True
@@ -66,11 +72,28 @@ class Board:
             for i in range(1, SIZE + 1):
                 if (self.noConflicts(cellNumber, i)):
                     self.place(cellNumber, i)
-                    if (self.explore()):
+                    if (self.fullSolve()):
                         return True
                     self.remove(cellNumber) 
             return False
 
+    # Checks to see if the board is solvable, and returns the
+    # board to the state it was in before it was checked
+        # Returns True if solvable
+        # Returns False if not
+    def checkSolvable(self):
+        tempBoard = deepcopy(self.board)
+        
+        if (self.fullSolve()):
+            self.board = tempBoard
+            return True
+        else: 
+            self.board = tempBoard
+            return False
+        
+    
+
+    # Prints out a copy of the board to the console
     def printBoard(self):
         for row in range(SIZE):
             for col in range(SIZE):
@@ -78,7 +101,11 @@ class Board:
 
             print()
     
-    def generateRandBoard(self):
+    # Tries to generate a starting board of 17 cells that is solvable
+        # If the starting 17 cell positions have conflicts and can't be filled, it returns False
+        # If the starting 17 cells have no conflicts with each other, it returns True and the
+        # board is set to the solvable 17 cells
+    def generateStartingBoard(self):
         self.clearBoard()
 
         # initialize possible cell numbers
@@ -115,7 +142,38 @@ class Board:
             if (self.getValue(i) == 0):
                 return False
         return True
+
+    # CURRENTLY UNTESTED
+    # checks if the user's input is valid once they've fully filled out the board
+        # If the current board is not valid, returns False
+        # If the current board is valid, returns True
+    def checkValidSolution(self):
+        for cellNumber in range(0, 81, 1):
+            n = self.board[cellNumber // SIZE][cellNumber % SIZE]
+            # find the row that we want to check
+            rowCheck = cellNumber // SIZE
+            # find the col that we want to check
+            colCheck = cellNumber % SIZE
             
+            # check the row
+            for col in range(SIZE):
+                if self.board[rowCheck][col] == n and colCheck != col:
+                    return False
+
+            # check the column
+            for row in range(SIZE):
+                if self.board[row][colCheck] == n and rowCheck != row:
+                    return False
+
+            # check the box
+            box_row = rowCheck // 3
+            box_col = colCheck // 3
+            for i in range(box_col * 3, box_col * 3 + 3):
+                for j in range(box_row * 3, box_row * 3 + 3):
+                    if self.board[j][i] == n and rowCheck != i and colCheck != j:
+                        return False
+
+        return True
     
     
     # BELOW CODE FOR TESTING PURPOSE
@@ -168,3 +226,6 @@ class Board:
         
         for i in range(0, 81):
             self.place(i, arr[i])
+
+
+            
