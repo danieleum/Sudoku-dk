@@ -64,7 +64,7 @@ def testCheckSolvable():
     print(board.checkSolvable())
     board.printBoard()
 
-testCheckSolvable()
+#testCheckSolvable()
 
 def testFullSolve():
     board = Board()
@@ -74,3 +74,5 @@ def testFullSolve():
         board.printBoard()
 
 #testFullSolve()
+
+
