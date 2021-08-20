@@ -1,5 +1,6 @@
 import pygame
 from board import Board
+from userBoard import UserBoard
 
 WIDTH, HEIGHT = 800, 700
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -14,18 +15,21 @@ def main():
     
     run = True
     board = Board()
+    board.generateStartingBoard()
+    temp = board.returnBoard()
+    user = UserBoard(temp)
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
 
-        board.place(23, 3)
-        draw_window(board)
+
+        draw_window(board, user)
                 
     pygame.quit()
 
 
-def draw_window(board):
+def draw_window(board, user):
     WINDOW.fill(WHITE)
     for i in range(0, 10):
         if i % 3 == 0:
@@ -35,12 +39,8 @@ def draw_window(board):
         pygame.draw.line(WINDOW, (0,0,0), (50 + 50 * i, 50), (50 + 50 * i, 500), 2) 
         pygame.draw.line(WINDOW, (0,0,0), (50, 50 + 50 * i), (500, 50 + 50 * i), 2)
     
-    for i in range(SIZE):
-        for j in range(SIZE):
-            if (board.board[i, j] != 0):
-                # draw the number pic in
-                pygame.draw.line(WINDOW, BLACK, (0, 0), (50, 50), 3)
 
+    user.drawNum(0, WINDOW)
     pygame.display.update()
 
 if __name__ == "__main__":

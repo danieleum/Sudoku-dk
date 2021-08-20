@@ -3,8 +3,11 @@ import pygame
 import numpy as np
 from copy import copy, deepcopy
 import random
+import time
+
 
 SIZE = 9
+TIMEOUT = 3
 
 class Board:
     def __init__(self):
@@ -53,7 +56,7 @@ class Board:
         box_col = colCheck // 3
         for i in range(box_col * 3, box_col * 3 + 3):
             for j in range(box_row * 3, box_row * 3 + 3):
-                if self.board[j][i] == n and rowCheck != i and colCheck != j:
+                if self.board[j][i] == n and colCheck != i and rowCheck != j:
                     return False
 
         return True
@@ -63,7 +66,12 @@ class Board:
     # of the board. 
         # If it can do that with no conflicts, it returns True.
         # If it can't do that with no conflicts, it returns False.
-    def fullSolve(self):
+    def fullSolve(self, timeout, origTime):
+        # check if we're past the timeout
+        currTime = time.time()
+        if (currTime - origTime > timeout):
+            return False
+
         # gets next open space first
         cellNumber = self.getUnassignedLocation()
         if (cellNumber == -1):
@@ -72,7 +80,7 @@ class Board:
             for i in range(1, SIZE + 1):
                 if (self.noConflicts(cellNumber, i)):
                     self.place(cellNumber, i)
-                    if (self.fullSolve()):
+                    if (self.fullSolve(timeout, origTime)):
                         return True
                     self.remove(cellNumber) 
             return False
@@ -84,7 +92,8 @@ class Board:
     def checkSolvable(self):
         tempBoard = deepcopy(self.board)
         
-        if (self.fullSolve()):
+        origTime = time.time()
+        if (self.fullSolve(TIMEOUT, origTime)):
             self.board = tempBoard
             return True
         else: 
@@ -92,7 +101,6 @@ class Board:
             return False
         
     
-
     # Prints out a copy of the board to the console
     def printBoard(self):
         for row in range(SIZE):
@@ -101,9 +109,13 @@ class Board:
 
             print()
     
-    # Tries to generate a starting board of 17 cells that is solvable
-        # If the starting 17 cell positions have conflicts and can't be filled, it returns False
-        # If the starting 17 cells have no conflicts with each other, it returns True and the
+    # returns the current 2d array board
+    def returnBoard(self):
+        return self.board
+    
+    # Tries to generate a starting board of 14 cells that is solvable
+        # If the starting 14 cell positions have conflicts and can't be filled, it returns False
+        # If the starting 14 cells have no conflicts with each other, it returns True and the
         # board is set to the solvable 17 cells
     def generateStartingBoard(self):
         self.clearBoard()
@@ -114,9 +126,9 @@ class Board:
             cellNumbers.append(i)
         
         chosenCells = []
-        # generate 17 cell numbers
+        # generate 14 cell numbers
             # use a set to make sure none are the same
-            # while (set size is less than 17), generate rand num and add to set
+            # while (set size is less than 14), generate rand num and add to set
         while (len(chosenCells) < 17):
             check = True
             while check:
@@ -170,7 +182,7 @@ class Board:
             box_col = colCheck // 3
             for i in range(box_col * 3, box_col * 3 + 3):
                 for j in range(box_row * 3, box_row * 3 + 3):
-                    if self.board[j][i] == n and rowCheck != i and colCheck != j:
+                    if self.board[j][i] == n and colCheck != i and rowCheck != j:
                         return False
 
         return True
