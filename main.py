@@ -22,7 +22,11 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-
+            # button 1 is the left click
+            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                position = pygame.mouse.get_pos()
+                # x and y coordinates // 50 return box position w/math
+                insert(WINDOW, (position[0] // 50, position[1] // 50))
 
         draw_window(board, user)
                 
@@ -39,9 +43,17 @@ def draw_window(board, user):
         pygame.draw.line(WINDOW, (0,0,0), (50 + 50 * i, 50), (50 + 50 * i, 500), 2) 
         pygame.draw.line(WINDOW, (0,0,0), (50, 50 + 50 * i), (500, 50 + 50 * i), 2)
     
-
-    user.drawNum(0, WINDOW)
+    for i in range(81):
+        user.startNum(WINDOW)
     pygame.display.update()
+
+def insert(WINDOW, position):
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return
+            if event.type == pygame.KEYDOWN:
+                print()
 
 if __name__ == "__main__":
   main()

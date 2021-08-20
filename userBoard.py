@@ -7,8 +7,38 @@ from board import Board
 
 SIZE = 9
 
-ONE = pygame.image.load(os.path.join('Numbers', 'number1.png'))
-ONE_SIZE = pygame.transform.scale(ONE, (60,60))
+# grabbing pics of the numbers to display
+ONE_PIC = pygame.image.load(os.path.join('Numbers', 'number1.png'))
+ONE = pygame.transform.scale(ONE_PIC, (40,40))
+TWO_PIC = pygame.image.load(os.path.join('Numbers', 'number2.png'))
+TWO = pygame.transform.scale(TWO_PIC, (40,40))
+THREE_PIC = pygame.image.load(os.path.join('Numbers', 'number3.png'))
+THREE = pygame.transform.scale(THREE_PIC, (40,40))
+FOUR_PIC = pygame.image.load(os.path.join('Numbers', 'number4.png'))
+FOUR = pygame.transform.scale(FOUR_PIC, (40,40))
+FIVE_PIC = pygame.image.load(os.path.join('Numbers', 'number5.png'))
+FIVE = pygame.transform.scale(FIVE_PIC, (40,40))
+SIX_PIC = pygame.image.load(os.path.join('Numbers', 'number6.png'))
+SIX = pygame.transform.scale(SIX_PIC, (40,40))
+SEVEN_PIC = pygame.image.load(os.path.join('Numbers', 'number7.png'))
+SEVEN = pygame.transform.scale(SEVEN_PIC, (40,40))
+EIGHT_PIC = pygame.image.load(os.path.join('Numbers', 'number8.png'))
+EIGHT = pygame.transform.scale(EIGHT_PIC, (40,40))
+NINE_PIC = pygame.image.load(os.path.join('Numbers', 'number9.png'))
+NINE = pygame.transform.scale(NINE_PIC, (40,40))
+
+# dictionary of the numbers
+nums = {
+  1: ONE,
+  2: TWO,
+  3: THREE,
+  4: FOUR,
+  5: FIVE,
+  6: SIX,
+  7: SEVEN,
+  8: EIGHT,
+  9: NINE
+}
 
 class UserBoard:
     
@@ -57,16 +87,13 @@ class UserBoard:
 
       return result
 
-    def drawNum(self, cellNum, WINDOW):
+    def startNum(self, WINDOW):
       #font = pygame.font.SysFont(None, 40)
 
-      row = cellNum // SIZE
-      col = cellNum % SIZE
-
-      WINDOW.blit(ONE_SIZE, (0,0))
-
-      
-        
+      for row in range(9):
+        for col in range(9):
+          if self.cells[row][col] != 0:
+            WINDOW.blit(nums[self.cells[row][col]], (row * 50 + 55, col * 50 + 55))
 
 
     
