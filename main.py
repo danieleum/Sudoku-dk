@@ -25,6 +25,7 @@ def main():
             # button 1 is the left click
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 position = pygame.mouse.get_pos()
+
                 # x and y coordinates // 50 return box position w/math
                 insert(WINDOW, (position[0] // 50, position[1] // 50))
 

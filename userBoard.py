@@ -87,14 +87,36 @@ class UserBoard:
 
       return result
 
+    # draws the pre-inserted 17 numbers on the board
     def startNum(self, WINDOW):
-      #font = pygame.font.SysFont(None, 40)
-
       for row in range(9):
         for col in range(9):
           if self.cells[row][col] != 0:
             WINDOW.blit(nums[self.cells[row][col]], (row * 50 + 55, col * 50 + 55))
 
+    # insert the user input
+    def insert(self, WINDOW, position):
+      x, y = position[0], position[1]
+      run = True
+
+      while run:
+        for event in pygame.event.get():
+          if event.type == pygame.QUIT:
+            run = False
+          if event.type == pygame.KEYDOWN:
+            # just like an ascii value...
+            # 48 represents 0... 49 represents 1...
+            if (1 < event.key - 48 < 10):
+              pygame.draw.rect(WINDOW, (251, 247, 245), (x * 50 + 5, y * 50 + 5, 50 - 5, 50 - 5))
+              userInput = event.key - 48
+              self.cells[x - 1][y - 1] = userInput
+              WINDOW.blit(nums[userInput], (x * 50 + 55, y * 50 + 55))
+              pygame.display.update()
+              run = False
+
+            
+      # update the user board
+      WINDOW.blit(nums[self.cells[x][y]], (x * 50 + 55, y * 50 + 55))
 
     
     # Prints out a copy of the board to the console
