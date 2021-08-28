@@ -47,11 +47,12 @@ class UserBoard:
         # Fills cells array with appropriate Cell objects
     def __init__(self, board):
       self.cells = np.zeros((SIZE, SIZE)) 
-
+      self.init17 = []
       for i in range(9):
         for j in range(9):
           if (board[i][j] != 0):
             self.cells[i][j] = board[i][j]
+            self.init17.append(i * SIZE + j)
           
               
     # Updates the appropriate Cell with the given value
@@ -106,17 +107,19 @@ class UserBoard:
           if event.type == pygame.KEYDOWN:
             # just like an ascii value...
             # 48 represents 0... 49 represents 1...
-            if (1 < event.key - 48 < 10):
+            if (0 < event.key - 48 < 10 and (((x - 1) * SIZE + (y - 1)) not in self.init17)):
               pygame.draw.rect(WINDOW, (251, 247, 245), (x * 50 + 5, y * 50 + 5, 50 - 5, 50 - 5))
               userInput = event.key - 48
               self.cells[x - 1][y - 1] = userInput
               WINDOW.blit(nums[userInput], (x * 50 + 55, y * 50 + 55))
-              pygame.display.update()
               run = False
-
+            if (event.key == event.key.BACKSPACE or event.key == event.key.DELETE):
+              pygame.draw.rect(WINDOW, (251, 247, 245), (x * 50 + 5, y * 50 + 5, 50 - 5, 50 - 5))
+              self.cells[x - 1][y - 1] = 0
+              run = False
             
       # update the user board
-      WINDOW.blit(nums[self.cells[x][y]], (x * 50 + 55, y * 50 + 55))
+      #WINDOW.blit(nums[self.cells[x][y]], (x * 50 + 55, y * 50 + 55))
 
     
     # Prints out a copy of the board to the console

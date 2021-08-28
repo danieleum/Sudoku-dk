@@ -169,12 +169,12 @@ class Board:
             
             # check the row
             for col in range(SIZE):
-                if self.board[rowCheck][col] == n and colCheck != col:
+                if (self.board[rowCheck][col] == n and colCheck != col) or (self.board[rowCheck][col] == 0):
                     return False
 
             # check the column
             for row in range(SIZE):
-                if self.board[row][colCheck] == n and rowCheck != row:
+                if self.board[row][colCheck] == n and rowCheck != row or (self.board[row][colCheck] == 0):
                     return False
 
             # check the box

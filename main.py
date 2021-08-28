@@ -1,10 +1,14 @@
 import pygame
+import os
 from board import Board
 from userBoard import UserBoard
 
 WIDTH, HEIGHT = 800, 700
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Sudoku Solver")
+
+SOLUTION_BUTTON_PIC = pygame.image.load(os.path.join('Buttons', 'CheckSolutionButton.png'))
+SOLUTION_BUTTON = pygame.transform.scale(SOLUTION_BUTTON_PIC, (40,40))
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -27,9 +31,10 @@ def main():
                 position = pygame.mouse.get_pos()
 
                 # x and y coordinates // 50 return box position w/math
-                insert(WINDOW, (position[0] // 50, position[1] // 50))
+                user.insert(WINDOW, (position[0] // 50, position[1] // 50))
 
         draw_window(board, user)
+        pygame.display.update()
                 
     pygame.quit()
 
@@ -47,14 +52,6 @@ def draw_window(board, user):
     for i in range(81):
         user.startNum(WINDOW)
     pygame.display.update()
-
-def insert(WINDOW, position):
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                return
-            if event.type == pygame.KEYDOWN:
-                print()
 
 if __name__ == "__main__":
   main()
