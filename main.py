@@ -1,5 +1,6 @@
 import pygame
 import os
+import time
 from board import Board
 from userBoard import UserBoard
 
@@ -8,7 +9,13 @@ WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Sudoku Solver")
 
 SOLUTION_BUTTON_PIC = pygame.image.load(os.path.join('Buttons', 'CheckSolutionButton.png'))
-SOLUTION_BUTTON = pygame.transform.scale(SOLUTION_BUTTON_PIC, (40,40))
+SOLUTION_BUTTON = pygame.transform.scale(SOLUTION_BUTTON_PIC, (85, 85))
+
+CORRECT_SOLUTION_PIC = pygame.image.load(os.path.join('Messages', 'correct.png'))
+CORRECT_SOLUTION = pygame.transform.scale(CORRECT_SOLUTION_PIC, (85, 85))
+
+INCORRECT_SOLUTION_PIC = pygame.image.load(os.path.join('Messages', 'incorrect.png'))
+INCORRECT_SOLUTION = pygame.transform.scale(INCORRECT_SOLUTION_PIC, (85, 85))
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -31,7 +38,15 @@ def main():
                 position = pygame.mouse.get_pos()
 
                 # x and y coordinates // 50 return box position w/math
-                user.insert(WINDOW, (position[0] // 50, position[1] // 50))
+                if (50 <= position[0] <= 500 and 50 <= position[1] <= 500):
+                    user.insert(WINDOW, (position[0] // 50, position[1] // 50))
+                
+                if (600 <= position[0] <= 685 and 550 <= position[1] <= 635):
+                    if (user.checkValidSolution()):
+                        print("Correct!")
+                        time.sleep(3)
+                    else:
+                        print("Incorrect. Try again")
 
         draw_window(board, user)
         pygame.display.update()
@@ -51,6 +66,8 @@ def draw_window(board, user):
     
     for i in range(81):
         user.startNum(WINDOW)
+
+    WINDOW.blit(SOLUTION_BUTTON, (600, 550))
     pygame.display.update()
 
 if __name__ == "__main__":
