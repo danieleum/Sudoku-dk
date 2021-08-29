@@ -145,7 +145,7 @@ class UserBoard:
               pygame.draw.rect(WINDOW, (251, 247, 245), (x * 50 + 5, y * 50 + 5, 50 - 5, 50 - 5))
               userInput = event.key - 48
               self.cells[x - 1][y - 1] = userInput
-              WINDOW.blit(nums[userInput], (x * 50 + 57, y * 50 + 57))
+              WINDOW.blit(nums[userInput], (x * 50 + 7, y * 50 + 7))
               run = False
             if ((event.key == pygame.K_BACKSPACE or event.key == pygame.K_DELETE) and (((x - 1) * SIZE + (y - 1)) not in self.init17)):
               pygame.draw.rect(WINDOW, (251, 247, 245), (x * 50 + 5, y * 50 + 5, 50 - 5, 50 - 5))

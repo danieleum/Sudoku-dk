@@ -12,10 +12,10 @@ SOLUTION_BUTTON_PIC = pygame.image.load(os.path.join('Buttons', 'CheckSolutionBu
 SOLUTION_BUTTON = pygame.transform.scale(SOLUTION_BUTTON_PIC, (85, 85))
 
 CORRECT_SOLUTION_PIC = pygame.image.load(os.path.join('Messages', 'correct.png'))
-CORRECT_SOLUTION = pygame.transform.scale(CORRECT_SOLUTION_PIC, (85, 85))
+CORRECT_SOLUTION = pygame.transform.scale(CORRECT_SOLUTION_PIC, (CORRECT_SOLUTION_PIC.get_width() // 2, CORRECT_SOLUTION_PIC.get_height() // 2))
 
 INCORRECT_SOLUTION_PIC = pygame.image.load(os.path.join('Messages', 'incorrect.png'))
-INCORRECT_SOLUTION = pygame.transform.scale(INCORRECT_SOLUTION_PIC, (85, 85))
+INCORRECT_SOLUTION = pygame.transform.scale(INCORRECT_SOLUTION_PIC, (INCORRECT_SOLUTION_PIC.get_width() // 2, INCORRECT_SOLUTION_PIC.get_height() // 2))
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -29,6 +29,8 @@ def main():
     board.generateStartingBoard()
     temp = board.returnBoard()
     user = UserBoard(temp)
+    WINDOW.fill(WHITE)
+    draw_window(board, user)
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -43,19 +45,21 @@ def main():
                 
                 if (600 <= position[0] <= 685 and 550 <= position[1] <= 635):
                     if (user.checkValidSolution()):
-                        print("Correct!")
-                        time.sleep(3)
+                        WINDOW.blit(CORRECT_SOLUTION, (200, 550))
+                            
                     else:
-                        print("Incorrect. Try again")
+                        WINDOW.blit(INCORRECT_SOLUTION, (200, 550))
+                        
+                    pygame.display.update()
+                            
 
-        draw_window(board, user)
+        
         pygame.display.update()
                 
     pygame.quit()
 
 
 def draw_window(board, user):
-    WINDOW.fill(WHITE)
     for i in range(0, 10):
         if i % 3 == 0:
             pygame.draw.line(WINDOW, (0,0,0), (50 + 50 * i, 50), (50 + 50 * i, 500), 4) 
@@ -69,6 +73,9 @@ def draw_window(board, user):
 
     WINDOW.blit(SOLUTION_BUTTON, (600, 550))
     pygame.display.update()
+
+def draw_instruction():
+    font = pygame.font.Sysfont("comicsans", 40)    
 
 if __name__ == "__main__":
   main()
