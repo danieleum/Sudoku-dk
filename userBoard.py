@@ -164,6 +164,8 @@ class UserBoard:
                 print(int(self.cells[row][col]), end=" ")
 
             print()
+
+    
           
     def checkValidSolution(self):
         for cellNumber in range(0, 81, 1):
@@ -192,5 +194,34 @@ class UserBoard:
                         return False
 
         return True
+
+    def getWrongCells(self):
+        wrongCells = []
+        for cellNumber in range(0, 81, 1):
+            n = self.cells[cellNumber // SIZE][cellNumber % SIZE]
+            # find the row that we want to check
+            rowCheck = cellNumber // SIZE
+            # find the col that we want to check
+            colCheck = cellNumber % SIZE
+            
+            # check the row
+            for col in range(SIZE):
+                if (self.cells[rowCheck][col] == n and colCheck != col) or (self.cells[rowCheck][col] == 0):
+                    wrongCells.append([rowCheck, col])
+
+            # check the column
+            for row in range(SIZE):
+                if self.cells[row][colCheck] == n and rowCheck != row or (self.cells[row][colCheck] == 0):
+                    wrongCells.append([row, colCheck])
+
+            # check the box
+            box_row = rowCheck // 3
+            box_col = colCheck // 3
+            for i in range(box_col * 3, box_col * 3 + 3):
+                for j in range(box_row * 3, box_row * 3 + 3):
+                    if self.cells[j][i] == n and colCheck != i and rowCheck != j:
+                        wrongCells.append([i, j])
+
+        return wrongCells
       
           

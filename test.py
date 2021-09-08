@@ -140,13 +140,14 @@ def printTest2(board):
 
 def checkUserBoardInit():
     board = Board()
-    board.generateStartingBoard()
-    temp = board.returnBoard()
+    flag = board.generateStartingBoard()
+    for i in range(1000):
+        
+        while (not flag):
+            print("failed once")
+            flag = board.generateStartingBoard()
 
-    user = UserBoard(temp)
-    user.printCells()
-
-#checkUserBoardInit()
+checkUserBoardInit()
 
     
 

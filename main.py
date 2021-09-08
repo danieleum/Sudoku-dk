@@ -8,8 +8,14 @@ WIDTH, HEIGHT = 800, 700
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Sudoku Solver")
 
+INSTRUCTIONS_PIC = pygame.image.load(os.path.join('Messages', 'instruction.png'))
+INSTRUCTIONS = pygame.transform.scale(INSTRUCTIONS_PIC, (int(INSTRUCTIONS_PIC.get_width() * 1.5), int(INSTRUCTIONS_PIC.get_height() * 1.5)))
+
 SOLUTION_BUTTON_PIC = pygame.image.load(os.path.join('Buttons', 'CheckSolutionButton.png'))
 SOLUTION_BUTTON = pygame.transform.scale(SOLUTION_BUTTON_PIC, (85, 85))
+
+SOLVE_BUTTON_PIC = pygame.image.load(os.path.join('Buttons', 'recursivePic.png'))
+SOLVE_BUTTON = pygame.transform.scale(SOLVE_BUTTON_PIC, (SOLVE_BUTTON_PIC.get_width() // 2, SOLVE_BUTTON_PIC.get_height() // 2))
 
 CORRECT_SOLUTION_PIC = pygame.image.load(os.path.join('Messages', 'correct.png'))
 CORRECT_SOLUTION = pygame.transform.scale(CORRECT_SOLUTION_PIC, (CORRECT_SOLUTION_PIC.get_width() // 2, CORRECT_SOLUTION_PIC.get_height() // 2))
@@ -26,11 +32,18 @@ def main():
     
     run = True
     board = Board()
-    board.generateStartingBoard()
+    flag = board.generateStartingBoard()
+    while (not flag):
+        flag = board.generateStartingBoard()
+    #board.filledBoard1()
     temp = board.returnBoard()
     user = UserBoard(temp)
     WINDOW.fill(WHITE)
     draw_window(board, user)
+    display_cor_sol = False
+    display_inc_sol = False
+    start_time = time.time()
+    conflicting_cells = []
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -45,14 +58,31 @@ def main():
                 
                 if (600 <= position[0] <= 685 and 550 <= position[1] <= 635):
                     if (user.checkValidSolution()):
-                        WINDOW.blit(CORRECT_SOLUTION, (200, 550))
-                            
+                        display_cor_sol = True
+                        start_time = time.time()
                     else:
-                        WINDOW.blit(INCORRECT_SOLUTION, (200, 550))
+                        conflicting_cells = user.getWrongCells()
+                        display_inc_sol = True
+                        start_time = time.time()
                         
                     pygame.display.update()
+                
+                if (525 <= position[0] <= 525 + SOLVE_BUTTON.get_width() and 450 <= position[1] <= 450 + SOLVE_BUTTON.get_height()):
+                    print("Solve button was clicked")
                             
-
+        if (display_cor_sol and time.time() - start_time < 3):
+            WINDOW.blit(CORRECT_SOLUTION, (200, 550))
+        elif (display_cor_sol and time.time() - start_time >= 3): 
+            display_cor_sol = False
+            pygame.draw.rect(WINDOW, (255, 255, 255), (200, 550, CORRECT_SOLUTION_PIC.get_width() // 2, CORRECT_SOLUTION_PIC.get_height() // 2))
+        
+        if (display_inc_sol and time.time() - start_time < 3):
+            WINDOW.blit(INCORRECT_SOLUTION, (200, 550))
+            drawAllWrongAns(WINDOW, conflicting_cells, (255, 0, 0))
+        elif (display_inc_sol and time.time() - start_time >= 3): 
+            display_inc_sol = False
+            drawAllWrongAns(WINDOW, conflicting_cells, (0, 0, 0))
+            pygame.draw.rect(WINDOW, (255, 255, 255), (200, 550, INCORRECT_SOLUTION_PIC.get_width() // 2, INCORRECT_SOLUTION_PIC.get_height() // 2))
         
         pygame.display.update()
                 
@@ -71,8 +101,21 @@ def draw_window(board, user):
     for i in range(81):
         user.startNum(WINDOW)
 
+    WINDOW.blit(SOLVE_BUTTON, (525, 450))
     WINDOW.blit(SOLUTION_BUTTON, (600, 550))
+    WINDOW.blit(INSTRUCTIONS, (525, 85))
     pygame.display.update()
+
+def drawAllWrongAns(WINDOW, conflicting_cells, color):
+    for i in range(len(conflicting_cells)):
+        drawWrongAns(WINDOW, conflicting_cells[i][0], conflicting_cells[i][1], color)
+
+def drawWrongAns(WINDOW, row, col, color):
+    pygame.draw.line(WINDOW, color, ((row + 1) * 50, (col + 1) * 50), ((row + 1) * 50, (col + 1) * 50 + 50), 2)
+    pygame.draw.line(WINDOW, color, ((row + 1) * 50 + 50, (col + 1) * 50), ((row + 1) * 50 + 50, (col + 1) * 50 + 50), 2)
+
+    pygame.draw.line(WINDOW, color, ((row + 1) * 50, (col + 1) * 50), ((row + 1) * 50 + 50, (col + 1) * 50), 2)
+    pygame.draw.line(WINDOW, color, ((row + 1) * 50, (col + 1) * 50 + 50), ((row + 1) * 50 + 50, (col + 1) * 50 + 50), 2)
 
 def draw_instruction():
     font = pygame.font.Sysfont("comicsans", 40)    
